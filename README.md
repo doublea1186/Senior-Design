@@ -7,9 +7,14 @@
 Run: 
 ```
 pip install SpeechRecognition 
+```
+```
 pip install moviepy 
+```
+```
 pip install pydub 
 ```
+
 
 ## Transcription
 ```
