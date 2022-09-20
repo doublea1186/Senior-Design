@@ -4,10 +4,14 @@
 
 ## Set up
 
-Run: \
-pip install SpeechRecognition \
-pip install moviepy \
-pip install pydub \
+Run: 
+```
+pip install SpeechRecognition 
+pip install moviepy 
+pip install pydub 
+```
 
 ## Transcription
-python3 utility/transcribe.py \
+```
+python3 utility/transcribe.py 
+```
