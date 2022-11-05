@@ -35,3 +35,4 @@ python -m summarize.backend.summarizer-cli input_file_name_of_lecture_transcript
 ```
 Example: python -m summarize.backend.summarizer-cli ./summarize/resources/CIS521_L1.txt
 
+Final summary gets stored in ./resources
