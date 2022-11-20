@@ -65,19 +65,21 @@ def parse_completion(completion):
             q_a_pairs.append((question, answer))
     return q_a_pairs
 
-def generate_questions_in_csv(output_file : str, summary_chunk_list : list):
-    csv_fields = ['Explanation', 'Question', 'Answer'] 
+def generate_questions_in_csv(output_file : str, summary_chunk_list : list, class_name : str, lecture_number : int):
+    csv_fields = ['ClassName', 'LectureNumber', 'QuestionNumber','Explanation', 'Question', 'Answer'] 
 
     # data rows of csv file 
     rows = []
 
-    for i, text in enumerate(summary_chunk_list):
+    q_number = 0
+    for _, text in enumerate(summary_chunk_list):
         # print(i)
         completion = get_questions(text)
         q_a_pairs = parse_completion(completion)
         for qa in q_a_pairs:
-            if len(qa[0]) > 2:
-                rows.append([text, qa[0], qa[1]])
+            if len(qa[0]) > 3:
+                rows.append([class_name, lecture_number, q_number, text, qa[0], qa[1]])
+                q_number += 1
 
     # name of csv file 
     filename = output_file
@@ -93,6 +95,12 @@ def generate_questions_in_csv(output_file : str, summary_chunk_list : list):
         # writing the data rows 
         csvwriter.writerows(rows)
 
+def main_generate_questions(input_summary_file_name, output_qa_file_name, class_name, lecture_number):
+  text_lines = read_file(input_summary_file_name)
+  chunked_for_qa = split_sentence_chunks(500, text_lines)
+  cleaned_for_qa = removing_new_lines(chunked_for_qa)
+  generate_questions_in_csv(output_qa_file_name, cleaned_for_qa, class_name, lecture_number)
+
 if __name__ == '__main__':
     input_file = "./resources/CIS521_L1_summary_2.txt"
     output_file = "question_answer.csv"
@@ -100,7 +108,9 @@ if __name__ == '__main__':
     text_lines = read_file(input_file)
     chunked_for_qa = split_sentence_chunks(500, text_lines)
     cleaned_for_qa = removing_new_lines(chunked_for_qa)
-    generate_questions_in_csv(output_file, cleaned_for_qa)
+    class_name = "AI and Philosophy"
+    lecture_number = 1
+    generate_questions_in_csv(output_file, cleaned_for_qa, class_name, lecture_number)
 
 
     
