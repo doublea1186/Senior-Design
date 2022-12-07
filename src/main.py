@@ -9,9 +9,9 @@ from utility import transcribe, database
 from summarize.backend import summarizer
 from qa import qa
 
-DB_USER = 'admin'
-DB_PASSWORD = 'CIS400401'
-DB_HOST = 'seniordesign.ccaubeo15ans.us-east-2.rds.amazonaws.com'
+DB_USER = ''
+DB_PASSWORD = ''
+DB_HOST = ''
 
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="A script for Question Answer Generation")

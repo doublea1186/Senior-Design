@@ -3,7 +3,7 @@ import os
 import csv
 import re
 
-openai.api_key = "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"
+openai.api_key = "key"
 os.environ['OPENAI_API_KEY']=openai.api_key
 
 def read_file(input_file: str):

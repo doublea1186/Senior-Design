@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 import pymysql
 import pandas as pd
 
-DB_USER = 'admin'
-DB_PASSWORD = 'CIS400401'
-DB_HOST = 'seniordesign.ccaubeo15ans.us-east-2.rds.amazonaws.com'
-DB_NAME = 'CIS521'
+DB_USER = ''
+DB_PASSWORD = ''
+DB_HOST = ''
+DB_NAME = ''
 
 
 class DatabaseHandler:
