@@ -41,7 +41,7 @@ Final summary gets stored in ./resources
 
 ```
 cd src
-python -m main.py --path=file_path --class_name=class_name --lecture_numer=lecture_number --table_name=table_name
+python -m main.py --path=file_path --class_name=class_name --lecture_number=lecture_number --table_name=table_name
 ```
 
-Example: python -m main.py --path=test.mp4 --class_name=CIS521 --lecture_numer=4 --table_name=CIS400401
+Example: python -m main.py --path=test.mp4 --class_name=CIS521 --lecture_number=4 --table_name=CIS400401
