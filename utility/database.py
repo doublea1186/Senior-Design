@@ -24,7 +24,7 @@ class DatabaseHandler:
         conn = pymysql.connect(host=DB_HOST, user=DB_USER,
                                password=DB_PASSWORD, connect_timeout=10)
         with conn.cursor() as cur:
-            cur.execute(f'create database {db_name}')
+            cur.execute(f'create database [if not exists] {db_name}')
 
     def create_connection(self, db_name):
         '''
@@ -41,31 +41,39 @@ class DatabaseHandler:
                                database=db_name,
                                cursorclass=pymysql.cursors.DictCursor)
 
-    def upload_csv_to_database(self, path: str, class_name: str):
+    def upload_csv_to_database(self, path: str, table_name: str):
         '''
         Uploads CSV file containing QA pairs to AWS SQL Database.
 
         Args
-            path: path to csv file 
-            class_name: the name of the class corresponding to the qa pairs.
-                For example if the questions are generated from qa pairs
-                for CIS521, class_name would be CIS521.
+            path: path to csv file. 
+            table_name: name of the SQL table. 
         '''
         df = pd.read_csv(path)
         sqlEngine = create_engine(
-            f'mysql+pymysql://{self.db_user}:{self.db_password}@{self.db_host}/{class_name}', pool_recycle=3600)
+            f'mysql+pymysql://{self.db_user}:{self.db_password}@{self.db_host}/{table_name}', pool_recycle=3600)
         db_connection = sqlEngine.connect()
-        df.to_sql(class_name, db_connection, if_exists='replace', index=False)
+        df.to_sql(table_name, db_connection, if_exists='append', index=False)
 
         db_connection.close()
 
-    def read_sql_table(self, class_name: str):
+    def read_sql_table(self, table_name: str):
+        '''
+        Reads QA pairs from AWS SQL Database.
+
+        Args
+            table_name: name of the SQL table. 
+        '''
+
         sqlEngine = create_engine(
-            f'mysql+pymysql://{self.db_user}:{self.db_password}@{self.db_host}/{class_name}', pool_recycle=3600)
+            f'mysql+pymysql://{self.db_user}:{self.db_password}@{self.db_host}/{table_name}', pool_recycle=3600)
         db_connection = sqlEngine.connect()
-        df = pd.read_sql(class_name, db_connection)
+        df = pd.read_sql(table_name, db_connection)
         print(df.head(10))
 
 
-if __name__ == "__main__":
-    print('hello')
+# if __name__ == "__main__":
+#     handler = DatabaseHandler(DB_USER, DB_PASSWORD, DB_HOST)
+#     handler.initialize_database_table('test')
+#     handler.upload_csv_to_database('question_answer.csv')
+#     handler.read_sql_table('test')

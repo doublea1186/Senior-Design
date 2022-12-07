@@ -1,4 +1,3 @@
-import speech_recognition as sr 
 import sys
 from moviepy.editor import * 
 import speech_recognition as sr 
@@ -69,19 +68,20 @@ def convert_from_video(video_file):
 
     Args:
         video_file: Path to video file.
+
+    Returns:
+        path to output file
     '''
     format = video_file[-4:]
+    output_file_name = video_file[:-4] + '.wav'
 
     if format == '.mp4' or format == '.mp3':
         clip = VideoFileClip(video_file)
-        clip.audio.write_audiofile(video_file[:-4] + '.wav')
+        clip.audio.write_audiofile(output_file_name)
     else:
         raise ValueError(
             'Unsupported format. Only mp3 and mp4 are supported. \n'
             f'Got {format}'
             )
-
-if __name__ == '__main__':
-    file_name = 'testing/cis521_lecture_1.wav'
-    output_file = 'testing/cis521_lecture_1.txt'
-    get_large_audio_transcription(file_name, output_file)
+    
+    return output_file_name
