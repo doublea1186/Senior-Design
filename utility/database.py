@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
 import pymysql
 import pandas as pd
+import os
+import sys
 
-DB_USER = ''
-DB_PASSWORD = ''
-DB_HOST = ''
-DB_NAME = ''
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
 
+from resources import config
 
 class DatabaseHandler:
     def __init__(self, db_user, db_password, db_host):
@@ -21,8 +22,8 @@ class DatabaseHandler:
         Args
             db_name: name of new table in database.
         '''
-        conn = pymysql.connect(host=DB_HOST, user=DB_USER,
-                               password=DB_PASSWORD, connect_timeout=10)
+        conn = pymysql.connect(host=self.db_host, user=self.db_user,
+                               password=self.db_password, connect_timeout=10)
         with conn.cursor() as cur:
             cur.execute(f'create database [if not exists] {db_name}')
 
@@ -72,8 +73,8 @@ class DatabaseHandler:
         print(df.head(10))
 
 
-# if __name__ == "__main__":
-#     handler = DatabaseHandler(DB_USER, DB_PASSWORD, DB_HOST)
-#     handler.initialize_database_table('test')
-#     handler.upload_csv_to_database('question_answer.csv')
-#     handler.read_sql_table('test')
+if __name__ == "__main__":
+    handler = DatabaseHandler(config.DB_USER, config.DB_PASSWORD, config.DB_HOST)
+    handler.initialize_database_table('test')
+    handler.upload_csv_to_database('Search_Problems_question_answer.csv')
+    handler.read_sql_table('test')
