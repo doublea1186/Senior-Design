@@ -22,25 +22,36 @@ class DatabaseHandler:
         Args
             db_name: name of new table in database.
         '''
-        conn = pymysql.connect(host=self.db_host, user=self.db_user,
-                               password=self.db_password, connect_timeout=10)
+        conn = self.create_connection()
         with conn.cursor() as cur:
-            cur.execute(f'create database [if not exists] {db_name}')
+            cur.execute(f'create database if not exists {db_name}')
 
-    def create_connection(self, db_name):
+    def create_connection(self):
         '''
-        Initalizes table into database.
+        Connects to Database.
 
-        Args
-            db_name: name of new table in database.
         '''
         
         return pymysql.connect(host=self.db_host,
                                port=3306,
                                user=self.db_user,
                                password=self.db_password,
-                               database=db_name,
+                               database=config.DB_NAME,
                                cursorclass=pymysql.cursors.DictCursor)
+    
+    def search_questions_by_criteria(self, table_name: str, criteria: dict[str, str]):
+        '''
+        Searches for questions in database by criteria.
+
+        Args
+            criteria: dictionary of criteria to search by. 
+        '''
+        criteria = ' and '.join([f'{key} = "{value}"' for key, value in criteria.items()])
+        conn = self.create_connection()
+        with conn.cursor() as cur:
+            cur.execute(f'select * from {table_name} where {criteria}')
+            return cur.fetchall()
+        
 
     def upload_csv_to_database(self, path: str, table_name: str):
         '''
@@ -71,10 +82,3 @@ class DatabaseHandler:
         db_connection = sqlEngine.connect()
         df = pd.read_sql(table_name, db_connection)
         print(df.head(10))
-
-
-if __name__ == "__main__":
-    handler = DatabaseHandler(config.DB_USER, config.DB_PASSWORD, config.DB_HOST)
-    handler.initialize_database_table('test')
-    handler.upload_csv_to_database('Search_Problems_question_answer.csv')
-    handler.read_sql_table('test')
